@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jsserver</title>
+</head>
+
+<script>
+
+    function concat(property, value) {
+        return "<tr><td><strong>" + property + "</strong></td><td>" + value + "</td></tr>";
+    }
+
+    function loadSystemInfo() {
+        var nav = "";
+
+        var properties = ["appCodeName", "appName", "appVersion", "platform", "userAgent", "languages", "cookieEnabled"];
+
+        properties.forEach(function (property, index, array) {
+            nav += concat(property, navigator[property]);
+        });
+
+        nav += concat("javaEnabled", navigator.javaEnabled());
+        nav += concat("screen.width", screen.width);
+        nav += concat("screen.height", screen.height);
+
+        document.getElementsByTagName("table")[0].innerHTML = nav;
+    }
+</script>
+
+<body onload="loadSystemInfo()">
+
+<table>
+</table>
+
+</body>
+</html>
