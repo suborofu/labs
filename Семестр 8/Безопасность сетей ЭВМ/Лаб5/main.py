@@ -7,8 +7,7 @@ protocol = {
     17: 'UDP',
 }
 
-
-def packet_callback(win_pcap, param, header, pkt_data):
+def callback(win_pcap, param, header, pkt_data):
     eth = dpkt.ethernet.Ethernet(pkt_data)
     if not isinstance(eth.data, dpkt.ip.IP):
         return
@@ -16,9 +15,9 @@ def packet_callback(win_pcap, param, header, pkt_data):
     if packet.p != 6:
         return
 
-    packet_callback.counter += 1
+    callback.counter += 1
     message = (
-        f"Packet №{packet_callback.counter}\n"
+        f"Packet №{callback.counter}\n"
         f"\t{'time': <16}: {datetime.now():%d.%m.%Y %H:%M:%S}\n"
         f"\t{'source': <16}: {'%d.%d.%d.%d' % tuple(packet.src)}:{packet.tcp.sport if packet.p == 6 else packet.udp.sport}\n"
         f"\t{'destination': <16}: {'%d.%d.%d.%d' % tuple(packet.dst)}:{packet.tcp.dport if packet.p == 6 else packet.udp.dport}\n"
@@ -28,7 +27,8 @@ def packet_callback(win_pcap, param, header, pkt_data):
     print(message)
 
 
-packet_callback.counter = 0
+callback.counter = 0
+device_name = "\\Device\\NPF_{380D2CEF-6641-47E4-A4D8-7411E41AFE28}"
 
-WinPcapUtils.capture_on_device_name(device_name="\\Device\\NPF_{380D2CEF-6641-47E4-A4D8-7411E41AFE28}",
-                                    callback=packet_callback)
+WinPcapUtils.capture_on_device_name(device_name= device_name,
+                                    callback=callback)
